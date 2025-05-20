@@ -17,9 +17,9 @@ def get_posts():
     return jsonify(POSTS)
 
 
-# # Attaches the flask app to the posts route.
+# Attaches the flask app to the POST route.
 @app.route('/api/posts', methods=['POST'])
-def add_posts():
+def add_post():
     """
     Creates a new post by loading first the list of POSTS, validates data for the title and content
     , and initializes a new list to store values if there is no title or content, then shows an error
@@ -52,6 +52,24 @@ def add_posts():
     POSTS.append(new_post)
     print("The new post created successfully.")
     return jsonify(new_post), 201
+
+
+# Attaches the flask app to the DELETE route.
+@app.route('/api/posts/<int:post_id>', methods=['DELETE'])
+def delete_post(post_id):
+    """
+    Runs an iteration over POSTS and if the ID unique key matches, deletes it immediately,
+    then it returns a message to the user with the deleted post, defined by its ID number.
+    :param post_id:
+    :return: otherwise, it returns a message to the user that the ID is not found.
+    """
+    for i, post in enumerate(POSTS):
+        if post['id'] == post_id:
+            POSTS.pop(i)
+            return jsonify({"message": f"Post with id {post_id} has been deleted successfully."}), 200
+
+    return jsonify({"error": f"Post with id {post_id} not found."}), 404
+
 
 
 
