@@ -72,6 +72,30 @@ def delete_post(post_id):
 
 
 
+# Attaches the flask app to the PUT route.
+@app.route('/api/posts/<int:post_id>', methods=['PUT'])
+def update_post(post_id):
+    """
+    Updates on a particular post by defining its ID by extracting JSON data from the body, and iterating
+    over POSTS, then if the ID unique key matches, or the title and content exist, it returns the data as
+    a response to the HTTP request.
+    :param post_id:
+    :return: otherwise, it returns a message to the user that the ID is not found.
+    """
+    data = request.get_json()
+
+    for post in POSTS:
+        if post['id'] == post_id:
+            if 'title' in data:
+                post['title'] = data['title']
+            if 'content' in data:
+                post['content'] = data['content']
+            return jsonify(post), 200
+
+    return jsonify({"error": f"Post with id {post_id} not found."}), 200
+
+
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5002, debug=True)
