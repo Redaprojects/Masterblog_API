@@ -95,6 +95,23 @@ def update_post(post_id):
     return jsonify({"error": f"Post with id {post_id} not found."}), 200
 
 
+# Attaches the flask app to the search route.
+@app.route('/api/posts/search', methods=['GET'])
+def search_posts():
+    """
+    Searches posts by title or content by initializing their queries.
+    Then returns a result to the user if something is matched based on the title or content.
+    """
+    title_query = request.args.get('title', '').lower()
+    content_query = request.args.get('content', '').lower()
+
+
+    results = [
+        post for post in POSTS
+        if title_query in post['title'].lower() or content_query in post['content'].lower()
+    ]
+
+    return jsonify(results), 200
 
 
 if __name__ == '__main__':
